@@ -2,41 +2,31 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>みんなのアイデア掲示板</title>
-  <style>
-    body { font-family: sans-serif; background: #f9f9f9; padding: 20px; }
-    h1 { text-align: center; }
-    #board { margin-top: 20px; }
-    .post { background: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .name { font-weight: bold; }
-  </style>
+  <title>Supabase Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <h1>みんなのアイデア掲示板</h1>
-  <form id="form">
-    名前: <input type="text" id="name" required><br><br>
-    アイデア: <input type="text" id="idea" required>
-    <button type="submit">投稿</button>
-  </form>
-
-  <div id="board"></div>
+  <h1>Supabase接続テスト</h1>
+  <div id="result">Loading...</div>
 
   <script>
-    const form = document.getElementById('form');
-    const board = document.getElementById('board');
+    // あなたの Supabase プロジェクト情報
+    const SUPABASE_URL = "https://odklxdlsqkucrqamdpnc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ka2x4ZGxzcWt1Y3JxYW1kcG5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2MjczMTIsImV4cCI6MjA3MTIwMzMxMn0.Ya5m6WMeGmb40tZvRuGJMAWdcPJKgfDauX9JpBtB8RE";
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const idea = document.getElementById('idea').value;
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const div = document.createElement('div');
-      div.className = 'post';
-      div.innerHTML = `<p class="name">${name}</p><p>${idea}</p>`;
-      board.prepend(div);
+    async function testConnection() {
+      let { data, error } = await supabase.from("threads").select("*").limit(1);
 
-      form.reset();
-    });
+      if (error) {
+        document.getElementById("result").textContent = "エラー: " + error.message;
+      } else {
+        document.getElementById("result").textContent = "接続OK! データ: " + JSON.stringify(data);
+      }
+    }
+
+    testConnection();
   </script>
 </body>
 </html>
